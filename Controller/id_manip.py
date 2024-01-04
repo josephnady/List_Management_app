@@ -34,7 +34,7 @@ def Dectivation_id_manip():
 
 
 def Activation_id_manip():
-    # # Add IDs in IDs.xlsx file:
+    # Add IDs in IDs.xlsx file:
     AbsolutePath = os.getcwd()
     relativepath = "IDs.xlsx"
     finalpath = os.path.join(str(AbsolutePath), relativepath)

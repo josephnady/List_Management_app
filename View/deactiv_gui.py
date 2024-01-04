@@ -12,7 +12,7 @@ class DeactGUI:
 
     def exit_application(self):
         # Perform any cleanup or additional actions before exiting
-        print("Exiting application.")
+        # print("Exiting application.")
         self.root.quit()
         inputs = [self.line_entry.get(),self.terr_entry.get()]
         return inputs
@@ -57,6 +57,7 @@ class DeactGUI:
     def deact_gui(cls):
         root = Tk()
         app = cls(root)
+        root.focus
         root.mainloop()
         results = app.exit_application()
         return results
