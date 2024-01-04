@@ -1,6 +1,6 @@
 Report/
 listmng_env/
-_pycache_/
-View/_pycache_/
-Model/_pycache_/
-Controller/_pycache_/
+__pycache__/
+View/__pycache__/
+Model/__pycache__/
+Controller/__pycache__/
