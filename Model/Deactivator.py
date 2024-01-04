@@ -7,19 +7,15 @@ from utils import Utils as u
 from View.deactiv_gui import DeactGUI as d
 
 def Deactivate(FinalInActiveListNoDuplicate):
-    
     line_terr_inputs = d.deact_gui()
     lininput = line_terr_inputs[0]
     terinput = line_terr_inputs[1]
-
     # variables
     LineInputvar = str(lininput).strip()
     TerrInputvar = str(terinput).strip()
     print(
         f"\nyour inputs are: \nLine: {LineInputvar}\nTerritory: {TerrInputvar}\n")
-
     # ______________________Process Started________________________________________
-
     # InOrder to calculate the process duraion.
     start_time1 = time.time()
 
@@ -38,32 +34,26 @@ def Deactivate(FinalInActiveListNoDuplicate):
 
     # ________________________________Login page_____________________________________
     # Go to the target website
-    browser = u.open_and_refresh_page("http://newcrm.liptispharma.com:88/liptis/crm/index.php")
+    browser = u.open_and_refresh_page(
+        "http://newcrm.liptispharma.com:88/liptis/crm/index.php")
     # browser.get("http://newcrm.liptispharma.com:88/liptis/crm/index.php")
     time.sleep(.5)
-
     browser.find_element('name', 'uname').send_keys("admin")
-
     # write the password
     browser.find_element('name', 'upass').send_keys("S_Admin2023")
-
     # choose the department
     browser.find_element('name', 'atype').send_keys('admin')
-
     # choose the page
     browser.find_element('name', 'page').send_keys('Message')
     time.sleep(.5)
-
     # click on login button
     browser.find_element(By.CLASS_NAME, 'button').click()
-
     # ____________________________________let's Go _____________________________________
     browser.get(
         "http://newcrm.liptispharma.com:88/liptis/crm/setting_list_management_search.php?lang=")
-
     teamdrp = browser.find_element(
         By.XPATH, '/html/body/table/tbody/tr[4]/th/center/fieldset/form/table/tbody/tr[1]/td[2]/select')
-    territorydrp = browser.find_element(By.ID,'tdivlist')
+    territorydrp = browser.find_element(By.ID, 'tdivlist')
     # Account Type
     pharmacy_Chk_bx = browser.find_element(
         By.XPATH, '/html/body/table/tbody/tr[4]/th/center/fieldset/form/table/tbody/tr[3]/td[2]/div/table/tbody/tr/td[2]/input')
@@ -75,7 +65,6 @@ def Deactivate(FinalInActiveListNoDuplicate):
     # search button
     search_btn = browser.find_element(
         By.XPATH, '/html/body/table/tbody/tr[4]/th/center/fieldset/form/table/tbody/tr[6]/th/input')
-
     # \\\\\\\\\\\\\\\\selecting the line and terr and search/////////////
     teamdrp.click()
     itemlist(teamdrp)
@@ -90,11 +79,9 @@ def Deactivate(FinalInActiveListNoDuplicate):
     am_Chk_bx.click()
     status.send_keys("active")
     time.sleep(.5)
-    print(LineInputvar,TerrInputvar)
+    print(LineInputvar, TerrInputvar)
     search_btn.click()
-
     # speak(f"Process started")
-
     # هنا هيقري كل الصفوف اللي في الجدول اللي جواه الليسته الخاصة بالمندوب
     clinic_teams_table_rows = browser.find_elements(
         By.XPATH, '/html/body/table/tbody/tr[4]/th/form/table/tbody/tr[3]/td/table/tbody/tr')
@@ -129,33 +116,25 @@ def Deactivate(FinalInActiveListNoDuplicate):
             Not_Exist_list.append(id)
     # print(Not_Exist_list)
 
-
     # ______________________Process Finished_______________________________________
-
     # Calculate the process time
     print(f"{'  Process has been finished  ':*^60}")
     print("Process Duration is:\n\n")
     print("-------- %s seconds --------" %
           round((time.time() - start_time1), 2))
     print("\n\n")
-
     # Save the report
     DeactivatedIDsDF = pd.DataFrame({
         "Deactivated IDs": FinalInActiveListNoDuplicate})
     print(
         f"data frame :\n {DeactivatedIDsDF}\nNo. of IDs that not found in crm is : {len(DeactivatedIDsDF)}\n")
-
     reportdirectory = f"{str(os.getcwd())}\Deactivation Report"
     export_path = f"{str(os.getcwd())}\Deactivation Report\{TerrInputvar}.xlsx"
-
     if os.path.isdir(reportdirectory) == False:
         os.mkdir(reportdirectory)
     else:
         DeactivatedIDsDF.to_excel(export_path, index=False)
-
     print(f"\n\nReport Saved in\n{export_path}\n\n")
 
-
-
-if __name__ =="__main__":
+if __name__ == "__main__":
     Deactivate()

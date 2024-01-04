@@ -1,8 +1,6 @@
 from utils import Utils as u
 from View.main_gui import MyApplication as m
 
-
-
 if __name__ == "__main__":
     cores = int(u.cpu_count())
     usedcores = cores/2
