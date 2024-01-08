@@ -7,14 +7,14 @@ from src.utils.logger import Logger
 
 class DataCollectorService:
     # file management
-    absolute_path = os.getcwd()
-    relative_path = "IDs.xlsx"
-    data_path = os.path.join(str(absolute_path), relative_path)
+    __absolute_path = os.getcwd()
+    __relative_path = "IDs.xlsx"
+    __data_path = os.path.join(str(__absolute_path), __relative_path)
 
     # worksheets names
-    deactivated_ids_worksheet_name = "Deactivator"
-    activated_ids_worksheet_name = "Activator"
-    act_deact_ids_worksheet_name = "Act_Deact"
+    __deactivated_ids_worksheet_name = "Deactivator"
+    __activated_ids_worksheet_name = "Activator"
+    __act_deact_ids_worksheet_name = "Act_Deact"
 
     # logger for debugging
     log = Logger()
@@ -23,7 +23,7 @@ class DataCollectorService:
         self.is_debug_enable = is_debug_enable
 
     def deactivated_ids_collector(self):
-        worksheet = self.__get_worksheet(self.deactivated_ids_worksheet_name)
+        worksheet = self.__get_worksheet(self.__deactivated_ids_worksheet_name)
 
         in_active_mr_values = worksheet["ENTER IDs HERE"].dropna().astype(int).values
         in_active_mr_list = in_active_mr_values.tolist()
@@ -45,7 +45,7 @@ class DataCollectorService:
         return final_in_active_list_no_duplicate
 
     def activation_ids_collector(self):
-        worksheet = self.__get_worksheet(self.activated_ids_worksheet_name)
+        worksheet = self.__get_worksheet(self.__activated_ids_worksheet_name)
 
         active_mr_values = worksheet["ENTER IDs HERE"].dropna().astype(int).values
         active_mr_list = active_mr_values.tolist()
@@ -62,7 +62,7 @@ class DataCollectorService:
         return final_active_list_no_duplicate
 
     def act_deact_ids_collector(self):
-        worksheet = self.__get_worksheet(self.act_deact_ids_worksheet_name)
+        worksheet = self.__get_worksheet(self.__act_deact_ids_worksheet_name)
 
         active_mr_values2 = worksheet.ActiveMRList.dropna().astype(int).values
         active_mr_list2 = active_mr_values2.tolist()
@@ -106,5 +106,5 @@ class DataCollectorService:
         return results
 
     def __get_worksheet(self, sheet_name) -> DataFrame:
-        worksheet = pd.read_excel(self.data_path, sheet_name=sheet_name)
+        worksheet = pd.read_excel(self.__data_path, sheet_name=sheet_name)
         return worksheet
