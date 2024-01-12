@@ -8,75 +8,70 @@ from Controller.mainfiles import \
 from utils import Utils as u
 
 
-class StartMyApp:
-    def __init__(self, root):
+class ParentInterface:
+    def __init__(self,root) -> None:
         self.root = root
         self.root.resizable(False, False)
         self.root.title('JN CRM Solutions')
         self.root.configure(background="silver")
         self.create_widgets()
+    
+    def create_widget(self):
+        self.header = ttk.Frame(self.root, padding="1 1 1 1")
+        self.header.grid(column=0, row=0, sticky=(N, W, E, S))
+        self.header.columnconfigure(2, weight=1)
+        self.header.rowconfigure(1, weight=1)
+        
+        self.control = ttk.Frame(self.root, padding="3 3 12 12")
+        self.control.grid(column=0, row=1, sticky=(N, W, E, S))
+        self.control.columnconfigure(2, weight=1)
+        self.control.rowconfigure(8, weight=1)
+        
+        self.footer = ttk.Frame(self.root, padding="1 1 1 1")
+        self.footer.grid(column=0, row=2, sticky=(N, W, E, S))
+        self.footer.columnconfigure(2, weight=1)
+        self.footer.rowconfigure(1, weight=1)
+        
+        self.options = {'padx': 1, 'pady': 1}
+        pass
+
+    def exit_application(self):
+        # Perform any cleanup or additional actions before exiting
+        print("Exiting application.")
+        self.root.quit()
+
+
+class StartInterface(ParentInterface):
+    def __init__(self, root) -> None:
+        super().__init__(root)
 
     def ultramode(self):
-        return MyApplication.run_gui()   
+        return UpdatedVersion.run_gui()   
         
     def normalmode(self):
-        return MyApplication_sync.run_gui()  
+        return OldSyncVersion.run_gui()  
     
     def create_widgets(self):
-        header = ttk.Frame(self.root, padding="1 1 1 1")
-        header.grid(column=0, row=0, sticky=(N, W, E, S))
-        header.columnconfigure(2, weight=1)
-        header.rowconfigure(1, weight=1)
-
-        control = ttk.Frame(self.root, padding="3 3 12 12")
-        control.grid(column=0, row=1, sticky=(N, W, E, S))
-        control.columnconfigure(2, weight=1)
-        control.rowconfigure(8, weight=1)
-
-        footer = ttk.Frame(self.root, padding="1 1 1 1")
-        footer.grid(column=0, row=2, sticky=(N, W, E, S))
-        footer.columnconfigure(2, weight=1)
-        footer.rowconfigure(1, weight=1)
-        
-        options = {'padx': 1, 'pady': 1}
-
-
-        title = Label(header, text="JN CRM Solutions", bg='black', fg='white')
+        super().create_widget()
+        title = Label(self.header, text="JN CRM Solutions", bg='black', fg='white')
         title.pack(fill=X)
-
         # ___________________labels__________________
-
-        lb1 = Label(control, text="CRM LISTS", fg='red',
+        lb1 = Label(self.control, text="CRM LISTS", fg='red',
                     bg='white', font=("Arial", 10))
         # lb1.place(x=40, y=170)
-        lb1.grid(column=0, row=1, **options)
-
-
+        lb1.grid(column=0, row=1, **self.options)
         # ___________________Buttons__________________
-
-        # lists
-        ultrabtn = Button(control, text="Ultra Fast Mode",
+        ultrabtn = Button(self.control, text="Ultra Fast Mode",
                             justify='center', width=20, height=2, command=self.ultramode)
-        # ActivatorBtn.place(x=20, y=220)
-        ultrabtn.grid(column=0, row=2, **options)
+        ultrabtn.grid(column=0, row=2, **self.options)
 
-        normalbtn = Button(control, text="Normal Mode",
+        normalbtn = Button(self.control, text="Normal Mode",
                         justify='center', width=20, height=2, command=self.normalmode)
-        # Act_Deact.place(x=20, y=270)
-        normalbtn.grid(column=0, row=3, **options)
-
+        normalbtn.grid(column=0, row=3, **self.options)
         # _____________________Footer_______________________
-        footer = Label(footer, text="Developed by Dr. Joseph Nady",
+        footer = Label(self.footer, text="Developed by Dr. Joseph Nady",
                     fg='black', bg="silver", font=("Arial", 7))
-        # footer.place(x=150, y=480)
         footer.pack(fill=X)
-        # footer.grid(column=0,row=0,columnspan=2)
-
-
-        def exit_application(self):
-            # Perform any cleanup or additional actions before exiting
-            print("Exiting application.")
-            self.root.quit()
 
     @classmethod
     def run_start_gui(cls):
@@ -84,13 +79,30 @@ class StartMyApp:
         app = cls(root)
         root.mainloop()
 
-class MyApplication:
-    def __init__(self, root):
-        self.root = root
-        self.root.resizable(False, False)
-        self.root.title('JN CRM Solutions')
-        self.root.configure(background="silver")
-        self.create_widgets()
+class VersionInterface(ParentInterface):
+    def __init__(self,root) -> None:
+        return super().__init__(root)
+    
+    def create_buttons(self):
+        self.ActivatorBtn = Button(self.control, text="Accounts Activator",
+                            justify='center', width=20, height=2, command=self.activate)
+        self.ActivatorBtn.grid(column=0, row=2, **self.options)
+        self.Act_Deact = Button(self.control, text="Accounts Activation \nand Deactiation",
+                        justify='center', width=20, height=2, command=self.both)
+        self.Act_Deact.grid(column=0, row=3, **self.options)
+        self.DeactivatorBtn = Button(self.control, text="Accounts De-activator",
+                                justify='center', width=20, height=2, command=self.deactivate)
+        # DeactivatorBtn.place(x=20, y=320)
+        self.DeactivatorBtn.grid(column=0, row=4, **self.options)
+        # _____________________Footer_______________________
+        self.foot = Label(self.footer, text="Developed by Dr. Joseph Nady",
+                    fg='black', bg="silver", font=("Arial", 7))
+        self.foot.pack(fill=X)
+
+
+class UpdatedVersion(VersionInterface):
+    def __init__(self, root) -> None:
+        super().__init__(root)
         cores = int(u.cpu_count())
         self.usedcores = cores/2
         
@@ -107,68 +119,15 @@ class MyApplication:
         return main_Act_Deact(self.usedcores)
     
     def create_widgets(self):
-        header = ttk.Frame(self.root, padding="1 1 1 1")
-        header.grid(column=0, row=0, sticky=(N, W, E, S))
-        header.columnconfigure(2, weight=1)
-        header.rowconfigure(1, weight=1)
-
-        control = ttk.Frame(self.root, padding="3 3 12 12")
-        control.grid(column=0, row=1, sticky=(N, W, E, S))
-        control.columnconfigure(2, weight=1)
-        control.rowconfigure(8, weight=1)
-
-        footer = ttk.Frame(self.root, padding="1 1 1 1")
-        footer.grid(column=0, row=2, sticky=(N, W, E, S))
-        footer.columnconfigure(2, weight=1)
-        footer.rowconfigure(1, weight=1)
-        
-        options = {'padx': 1, 'pady': 1}
-
-
-        title = Label(header, text="JN CRM Solutions Ultra", bg='black', fg='white')
+        super().create_widget()
+        title = Label(self.header, text="JN CRM Solutions Ultra", bg='black', fg='white')
         title.pack(fill=X)
-
         # ___________________labels__________________
-
-        lb1 = Label(control, text="CRM LISTS", fg='red',
+        lb1 = Label(self.control, text="CRM LISTS", fg='red',
                     bg='white', font=("Arial", 10))
         # lb1.place(x=40, y=170)
-        lb1.grid(column=0, row=1, **options)
-
-
-        # ___________________Entry__________________
-
-        # ___________________Buttons__________________
-
-        # lists
-        ActivatorBtn = Button(control, text="Accounts Activator",
-                            justify='center', width=20, height=2, command=self.activate)
-        # ActivatorBtn.place(x=20, y=220)
-        ActivatorBtn.grid(column=0, row=2, **options)
-
-        Act_Deact = Button(control, text="Accounts Activation \nand Deactiation",
-                        justify='center', width=20, height=2, command=self.both)
-        # Act_Deact.place(x=20, y=270)
-        Act_Deact.grid(column=0, row=3, **options)
-
-        DeactivatorBtn = Button(control, text="Accounts De-activator",
-                                justify='center', width=20, height=2, command=self.deactivate)
-        # DeactivatorBtn.place(x=20, y=320)
-        DeactivatorBtn.grid(column=0, row=4, **options)
-
-
-        # _____________________Footer_______________________
-        footer = Label(footer, text="Developed by Dr. Joseph Nady",
-                    fg='black', bg="silver", font=("Arial", 7))
-        # footer.place(x=150, y=480)
-        footer.pack(fill=X)
-        # footer.grid(column=0,row=0,columnspan=2)
-
-
-        def exit_application(self):
-            # Perform any cleanup or additional actions before exiting
-            print("Exiting application.")
-            self.root.quit()
+        lb1.grid(column=0, row=1, **self.options)
+        super().create_buttons()
 
     @classmethod
     def run_gui(cls):
@@ -176,14 +135,10 @@ class MyApplication:
         app = cls(root)
         root.mainloop()
 
-class MyApplication_sync:
+
+class OldSyncVersion(VersionInterface):
     def __init__(self, root):
-        self.root = root
-        self.root.resizable(False, False)
-        self.root.title('JN CRM Solutions')
-        self.root.configure(background="silver")
-        self.create_widgets()
-        
+        super().__init__(root)
 
     def activate(self):
         self.root.quit()
@@ -196,72 +151,17 @@ class MyApplication_sync:
     def both(self):
         self.root.quit()
         return main_Act_Deact_sync()
-    
 
     def create_widgets(self):
-        header = ttk.Frame(self.root, padding="1 1 1 1")
-        header.grid(column=0, row=0, sticky=(N, W, E, S))
-        header.columnconfigure(2, weight=1)
-        header.rowconfigure(1, weight=1)
-
-        control = ttk.Frame(self.root, padding="3 3 12 12")
-        control.grid(column=0, row=1, sticky=(N, W, E, S))
-        control.columnconfigure(2, weight=1)
-        control.rowconfigure(8, weight=1)
-
-        footer = ttk.Frame(self.root, padding="1 1 1 1")
-        footer.grid(column=0, row=2, sticky=(N, W, E, S))
-        footer.columnconfigure(2, weight=1)
-        footer.rowconfigure(1, weight=1)
-
-        options = {'padx': 1, 'pady': 1}
-
-
-        title = Label(header, text="JN CRM Solutions Normal", bg='black', fg='white')
-        title.pack(fill=X)
-
+        super().create_widget()
+        self.title = Label(self.header, text="JN CRM Solutions Normal", bg='black', fg='white')
+        self.title.pack(fill=X)
         # ___________________labels__________________
-
-        lb1 = Label(control, text="CRM LISTS", fg='red',
+        self.lb1 = Label(self.control, text="CRM LISTS", fg='red',
                     bg='white', font=("Arial", 10))
-        # lb1.place(x=40, y=170)
-        lb1.grid(column=0, row=1, **options)
-
-
-        # ___________________Entry__________________
-
-        # ___________________Buttons__________________
-
-        # lists
-        ActivatorBtn = Button(control, text="Accounts Activator",
-                            justify='center', width=20, height=2, command=self.activate)
-        # ActivatorBtn.place(x=20, y=220)
-        ActivatorBtn.grid(column=0, row=2, **options)
-
-        Act_Deact = Button(control, text="Accounts Activation \nand Deactiation",
-                        justify='center', width=20, height=2, command=self.both)
-        # Act_Deact.place(x=20, y=270)
-        Act_Deact.grid(column=0, row=3, **options)
-
-        DeactivatorBtn = Button(control, text="Accounts De-activator",
-                                justify='center', width=20, height=2, command=self.deactivate)
-        # DeactivatorBtn.place(x=20, y=320)
-        DeactivatorBtn.grid(column=0, row=4, **options)
-
-
-        # _____________________Footer_______________________
-        footer = Label(footer, text="Developed by Dr. Joseph Nady",
-                    fg='black', bg="silver", font=("Arial", 7))
-        # footer.place(x=150, y=480)
-        footer.pack(fill=X)
-        # footer.grid(column=0,row=0,columnspan=2)
-
-
-        def exit_application(self):
-            # Perform any cleanup or additional actions before exiting
-            # print("Exiting application.")
-            self.root.quit()
-
+        self.lb1.grid(column=0, row=1, **self.options)
+        super().create_buttons()
+    
     @classmethod
     def run_gui(cls):
         root = Tk()

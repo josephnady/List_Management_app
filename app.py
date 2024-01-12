@@ -1,7 +1,7 @@
 from utils import Utils as u
-from View.main_gui import MyApplication as m
-from View.main_gui import MyApplication_sync as ms
-from View.main_gui import StartMyApp as s
+from View.main_gui import UpdatedVersion as m
+from View.main_gui import OldSyncVersion as ms
+from View.main_gui import StartInterface as s
 from tkinter import Tk
 
 
@@ -19,3 +19,4 @@ if __name__ == "__main__":
     # Sync Version
     # ms.run_gui()
     print(f"{' All processess completed ':*^40}")
+
