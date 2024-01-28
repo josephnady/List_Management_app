@@ -1,9 +1,11 @@
 import time
 from Model.Deactivator import Deactivate,Deactivate_sync
 from Model.Activator import Activate,Activate_listmanagment,Activate_Pool_Phase1
+from Model.AmManagement import am_management
 from Controller.id_manip import Activation_id_manip
 from Controller.id_manip import Dectivation_id_manip
 from Controller.id_manip import Act_Deact_id_manip
+from Controller.id_manip import am_data_importer
 from utils import Utils as u
 from multiprocessing import Pool
 from View.deactiv_gui import DeactGUI as d
@@ -106,7 +108,7 @@ def main_Activate_sync(activelist):
                     
                     browser.execute_script(f"window.open('', '_blank');")
                     print(f">>>> Start activation of {newID}  <<<<<")
-                    u.navigate_to(browser,newID)
+                    u.navigate_to_clinic(browser,newID)
                     browser.switch_to.window(browser.window_handles[-1])
                 except IndexError:
                     print("Index Error")
@@ -206,4 +208,9 @@ def main_Act_Deact_sync():
         print("\n\n")
     
     Deactivate_sync(DeactIDs,lininput,terinput)
+
+def main_am():
+    results = am_data_importer()
+    # print(results)
+    am_management(results)
 

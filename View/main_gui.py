@@ -4,7 +4,8 @@ from tkinter import ttk
 from Controller.mainfiles import \
     main_Act_Deact_sync,\
     main_Act_Deact,main_Activate,\
-    main_Activate_sync,main_Deactivate
+    main_Activate_sync,main_Deactivate,\
+    main_am
 from utils import Utils as u
 
 
@@ -92,8 +93,11 @@ class VersionInterface(ParentInterface):
         self.Act_Deact.grid(column=0, row=3, **self.options)
         self.DeactivatorBtn = Button(self.control, text="Accounts De-activator",
                                 justify='center', width=20, height=2, command=self.deactivate)
-        # DeactivatorBtn.place(x=20, y=320)
         self.DeactivatorBtn.grid(column=0, row=4, **self.options)
+        self.AmListManagement = Button(self.control, text="AM List Management",
+                                       justify='center', width=20, height=2, command=self.am_list)
+        self.AmListManagement.grid(column=0, row=5, **self.options)
+        # DeactivatorBtn.place(x=20, y=320)
         # _____________________Footer_______________________
         self.foot = Label(self.footer, text="Developed by Dr. Joseph Nady",
                     fg='black', bg="silver", font=("Arial", 7))
@@ -118,6 +122,11 @@ class UpdatedVersion(VersionInterface):
         self.root.quit()
         return main_Act_Deact(self.usedcores)
     
+    def am_list(self):
+        self.root.quit()
+        return main_am()
+
+            
     def create_widgets(self):
         super().create_widget()
         title = Label(self.header, text="JN CRM Solutions Ultra", bg='black', fg='white')
@@ -151,6 +160,10 @@ class OldSyncVersion(VersionInterface):
     def both(self):
         self.root.quit()
         return main_Act_Deact_sync()
+
+    def am_list(self):
+        self.root.quit()
+        return main_am()
 
     def create_widgets(self):
         super().create_widget()

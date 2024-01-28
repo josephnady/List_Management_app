@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, TimeoutException
 
 
 
@@ -126,8 +127,9 @@ class Utils:
                 print("Refreshing the page...")
                 continue
         return browser
-
-    def navigate_to(browser,id):
+    
+    @staticmethod
+    def navigate_to_clinic(browser,id):
 
         attempts = 0
         max_attempts = 3
@@ -164,8 +166,46 @@ class Utils:
             By.XPATH, '//*[@id="right"]/table[1]/tbody/tr[2]/td/form/table/tbody/tr[5]/td/img')
         search_btn.click()
 
+    @staticmethod
+    def navigate_to_am(browser,id):
+        attempts = 0
+        max_attempts = 3
+        while attempts < max_attempts:
+            try:
+                # Open the URL
+                browser.get(
+                    "http://newcrm.liptispharma.com:88/liptis/crm/hospitals.php?lang=")
 
+                # You can add additional wait conditions if needed
+                WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH,
+                                                     '//*[@id="right"]/table[1]/tbody/tr[2]/td/form/table/tbody/tr[1]/td[2]/input')))
+                # If the page loads successfully, break out of the loop
+                break
+            except Exception as e:
+                # print(f"Error: {str(e)}")
+                print(f"Error: {e}")
+                attempts += 1
+                browser.refresh()
+                # Refresh the page and retry
+                print("Refreshing the page...")
+                continue
+        id_box = browser.find_element(
+        By.XPATH, '//*[@id="right"]/table[1]/tbody/tr[2]/td/form/table/tbody/tr[1]/td[2]/input')
+        id_box.send_keys(id)
 
+        search_btn = browser.find_element(
+        By.XPATH, '//*[@id="right"]/table[1]/tbody/tr[2]/td/form/table/tbody/tr[5]/td/img')
+        search_btn.click()
+        try:
+            errors = [NoSuchElementException, ElementNotInteractableException,TimeoutException]
+            clinic = WebDriverWait(driver=browser, timeout=2, ignored_exceptions=errors).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="rightlist"]/table/tbody/tr[4]')))
+            # print(clinic)
+        except TimeoutException as e:
+            return (id)
+
+        
     @staticmethod
     def waitforclinic(browser):
         attempts = 0
@@ -184,8 +224,6 @@ class Utils:
                 # Refresh the page and retry
                 print("Refreshing the page...")
                 continue
-
-
 
     @staticmethod
     def save_report(list,terrname,type:int):

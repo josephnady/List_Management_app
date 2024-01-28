@@ -4,7 +4,5 @@ call activate
 cd ..
 cd ..
 pip install --upgrade pip
-pip install -r dependencies.txt
+pip install -r Requirements.txt
 pause
-
-
